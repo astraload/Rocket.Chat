@@ -1,3 +1,11 @@
+import Agent from 'meteor/kschingiz:meteor-elastic-apm';
+
+const options = {
+  serviceName: 'meteor-demo-app'
+};
+Agent.start(options);
+
+
 import './importPackages';
 import '../imports/startup/server';
 
