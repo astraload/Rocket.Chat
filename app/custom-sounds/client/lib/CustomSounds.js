@@ -1,18 +1,18 @@
 import { Meteor } from 'meteor/meteor';
 import { ReactiveVar } from 'meteor/reactive-var';
 import _ from 'underscore';
-
 import { CachedCollectionManager } from '../../../ui-cached-collection';
 
 class CustomSoundsClass {
 	constructor() {
 		this.list = new ReactiveVar({});
-		this.add({ _id: 'beep', name: 'Beep', extension: 'mp3', src: 'sounds/beep.mp3' });
-		this.add({ _id: 'chelle', name: 'Chelle', extension: 'mp3', src: 'sounds/chelle.mp3' });
-		this.add({ _id: 'ding', name: 'Ding', extension: 'mp3', src: 'sounds/ding.mp3' });
-		this.add({ _id: 'droplet', name: 'Droplet', extension: 'mp3', src: 'sounds/droplet.mp3' });
-		this.add({ _id: 'highbell', name: 'Highbell', extension: 'mp3', src: 'sounds/highbell.mp3' });
-		this.add({ _id: 'seasons', name: 'Seasons', extension: 'mp3', src: 'sounds/seasons.mp3' });
+		const prefix = this.getCDNPrefix();
+		this.add({ _id: 'beep', name: 'Beep', extension: 'mp3', src: `${ prefix }sounds/beep.mp3` });
+		this.add({ _id: 'chelle', name: 'Chelle', extension: 'mp3', src: `${ prefix }sounds/chelle.mp3` });
+		this.add({ _id: 'ding', name: 'Ding', extension: 'mp3', src: `${ prefix }sounds/ding.mp3` });
+		this.add({ _id: 'droplet', name: 'Droplet', extension: 'mp3', src: `${ prefix }sounds/droplet.mp3` });
+		this.add({ _id: 'highbell', name: 'Highbell', extension: 'mp3', src: `${ prefix }sounds/highbell.mp3` });
+		this.add({ _id: 'seasons', name: 'Seasons', extension: 'mp3', src: `${ prefix }sounds/seasons.mp3` });
 	}
 
 	add(sound) {
@@ -56,6 +56,11 @@ class CustomSoundsClass {
 	getList() {
 		const list = Object.values(this.list.get());
 		return _.sortBy(list, 'name');
+	}
+
+
+	getCDNPrefix() {
+		return 'https://d17w71clvpvrdq.cloudfront.net/';
 	}
 }
 export const CustomSounds = new CustomSoundsClass();
