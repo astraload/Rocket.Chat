@@ -59,7 +59,7 @@ Meteor.startup(() => {
 		if (value) {
 			injectIntoHead(key,
 				`${ standardFavicons }
-				<link rel="icon" sizes="any" type="image/svg+xml" href="assets/favicon.svg" />`);
+				<link rel="icon" sizes="any" type="image/svg+xml" href="https://d17w71clvpvrdq.cloudfront.net/assets/favicon.svg" />`);
 		} else {
 			injectIntoHead(key, standardFavicons);
 		}
