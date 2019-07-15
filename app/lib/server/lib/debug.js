@@ -65,14 +65,6 @@ const wrapMethods = function(name, originalHandler, methodsMap) {
 	};
 };
 
-const originalMeteorMethods = Meteor.methods;
-
-Meteor.methods = function(methodMap) {
-	_.each(methodMap, function(handler, name) {
-		wrapMethods(name, handler, methodMap);
-	});
-	originalMeteorMethods(methodMap);
-};
 
 const originalMeteorPublish = Meteor.publish;
 
