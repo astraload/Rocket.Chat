@@ -1,33 +1,11 @@
 import { Meteor } from 'meteor/meteor';
 import _ from 'underscore';
-import moment from 'moment';
-import log4js from 'log4js';
-import { Random } from 'meteor/random';
 import { roomTypes } from '../../../app/utils';
 import { hasPermission } from '../../../app/authorization';
 import { Rooms } from '../../../app/models';
 import { settings } from '../../../app/settings';
 
 import './emitter';
-
-log4js.configure({
-	appenders: {
-		console: {
-			type: 'console',
-		},
-		logstash: {
-			url: 'http://status.rc.astraload.com:8080',
-			type: '@log4js-node/logstash-http',
-			logType: 'application',
-			logChannel: 'test',
-			application: 'Rocket.chat',
-		},
-	},
-	categories: {
-		default: { appenders: ['console', 'logstash'], level: 'info' },
-	},
-});
-const logger = log4js.getLogger('myLogger');
 
 
 export const fields = {
@@ -85,37 +63,30 @@ const roomMap = (record) => {
 
 Meteor.methods({
 	'rooms/get'(updatedAt) {
-		const methodStartTime = moment();
-		const callingId = Random.id();
-		const methodName = 'rooms/get';
+		console.time('rooms/get');
 		const options = { fields };
 
 		if (!Meteor.userId()) {
 			if (settings.get('Accounts_AllowAnonymousRead') === true) {
-				return Rooms.findByDefaultAndTypes(true, ['c'], options).fetch();
+				const result = Rooms.findByDefaultAndTypes(true, ['c'], options).fetch();
+				console.timeEnd('rooms/get');
+				return result;
 			}
 			return [];
 		}
 		if (updatedAt instanceof Date) {
 			const update = Rooms.findBySubscriptionUserIdUpdatedAfter(Meteor.userId(), updatedAt, options).fetch();
-			const methodAfterUpdateTime = moment();
-			const afterUpdateDiff = methodAfterUpdateTime.diff(methodStartTime);
-
-			logger.info({ methodName, afterUpdateDiff, callingId });
-
-			const methodBeforeRemoveTime = moment();
 			const remove = Rooms.trashFindDeletedAfter(updatedAt, {}, { fields: { _id: 1, _deletedAt: 1 } }).fetch();
-			const methodAfterRemoveTime = moment();
-			const afterAfterRemoveDiff = methodAfterRemoveTime.diff(methodBeforeRemoveTime);
-			logger.info({ methodName, afterAfterRemoveDiff, callingId });
-			logger.info({ methodName, wholeMethodTime: methodAfterRemoveTime.diff(methodStartTime), callingId });
+			console.timeEnd('rooms/get');
 			return {
 				update,
 				remove,
 			};
 		}
 
-		return Rooms.findBySubscriptionUserId(Meteor.userId(), options).fetch();
+		const result = Rooms.findBySubscriptionUserId(Meteor.userId(), options).fetch();
+		console.timeEnd('rooms/get');
+		return result;
 	},
 
 	getRoomByTypeAndName(type, name) {
