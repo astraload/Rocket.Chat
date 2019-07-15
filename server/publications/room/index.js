@@ -4,6 +4,7 @@ import { roomTypes } from '../../../app/utils';
 import { hasPermission } from '../../../app/authorization';
 import { Rooms } from '../../../app/models';
 import { settings } from '../../../app/settings';
+import { Random } from 'meteor/random';
 
 import './emitter';
 
@@ -63,13 +64,14 @@ const roomMap = (record) => {
 
 Meteor.methods({
 	'rooms/get'(updatedAt) {
-		console.time('rooms/get');
+		const methodLabel = `rooms/get ${ Random.id() }`;
+		console.time(methodLabel);
 		const options = { fields };
 
 		if (!Meteor.userId()) {
 			if (settings.get('Accounts_AllowAnonymousRead') === true) {
 				const result = Rooms.findByDefaultAndTypes(true, ['c'], options).fetch();
-				console.timeEnd('rooms/get');
+				console.timeEnd(methodLabel);
 				return result;
 			}
 			return [];
@@ -77,7 +79,7 @@ Meteor.methods({
 		if (updatedAt instanceof Date) {
 			const update = Rooms.findBySubscriptionUserIdUpdatedAfter(Meteor.userId(), updatedAt, options).fetch();
 			const remove = Rooms.trashFindDeletedAfter(updatedAt, {}, { fields: { _id: 1, _deletedAt: 1 } }).fetch();
-			console.timeEnd('rooms/get');
+			console.timeEnd(methodLabel);
 			return {
 				update,
 				remove,
@@ -85,7 +87,7 @@ Meteor.methods({
 		}
 
 		const result = Rooms.findBySubscriptionUserId(Meteor.userId(), options).fetch();
-		console.timeEnd('rooms/get');
+		console.timeEnd(methodLabel);
 		return result;
 	},
 

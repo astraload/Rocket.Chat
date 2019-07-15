@@ -1,4 +1,5 @@
 import { Meteor } from 'meteor/meteor';
+import { Random } from 'meteor/random';
 
 import { Settings } from '../../../app/models';
 import { hasPermission } from '../../../app/authorization';
@@ -6,7 +7,8 @@ import './emitter';
 
 Meteor.methods({
 	'public-settings/get'(updatedAt) {
-		console.time('public-settings/get');
+		const methodLabel = `public-settings/get ${ Random.id() }`;
+		console.time(methodLabel);
 		const records = Settings.findNotHiddenPublic().fetch();
 
 		if (updatedAt instanceof Date) {
@@ -26,13 +28,13 @@ Meteor.methods({
 				},
 			}).fetch();
 
-			console.timeEnd('public-settings/get');
+			console.timeEnd(methodLabel);
 			return {
 				update,
 				remove,
 			};
 		}
-		console.timeEnd('public-settings/get');
+		console.timeEnd(methodLabel);
 		return records;
 	},
 	'private-settings/get'(updatedAfter) {
