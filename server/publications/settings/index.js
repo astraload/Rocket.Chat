@@ -7,6 +7,7 @@ import './emitter';
 
 Meteor.methods({
 	'public-settings/get'(updatedAt) {
+		this.unblock();
 		const methodLabel = `public-settings/get ${ Random.id() }`;
 		console.time(methodLabel);
 		const records = Settings.findNotHiddenPublic().fetch();

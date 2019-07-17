@@ -43,6 +43,8 @@ export const fields = {
 
 Meteor.methods({
 	'subscriptions/get'(updatedAt) {
+		this.unblock();
+
 		if (!Meteor.userId()) {
 			return [];
 		}

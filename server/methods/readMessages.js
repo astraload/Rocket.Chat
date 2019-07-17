@@ -6,6 +6,7 @@ import { Subscriptions } from '../../app/models';
 
 Meteor.methods({
 	readMessages(rid) {
+		this.unblock();
 		check(rid, String);
 
 		const userId = Meteor.userId();

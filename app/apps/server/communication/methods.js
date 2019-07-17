@@ -47,6 +47,7 @@ export class AppMethods {
 
 		Meteor.methods({
 			'apps/is-enabled'() {
+				this.unblock();
 				return instance.isEnabled();
 			},
 

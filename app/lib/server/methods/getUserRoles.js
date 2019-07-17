@@ -5,6 +5,7 @@ import { Roles, Users } from '../../../models';
 
 Meteor.methods({
 	getUserRoles() {
+		this.unblock();
 		if (!Meteor.userId()) {
 			throw new Meteor.Error('error-invalid-user', 'Invalid user', { method: 'getUserRoles' });
 		}

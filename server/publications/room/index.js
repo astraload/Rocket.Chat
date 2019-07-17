@@ -64,6 +64,7 @@ const roomMap = (record) => {
 
 Meteor.methods({
 	'rooms/get'(updatedAt) {
+		this.unblock();
 		const methodLabel = `rooms/get ${ Random.id() }`;
 		console.time(methodLabel);
 		const options = { fields };

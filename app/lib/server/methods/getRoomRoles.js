@@ -7,6 +7,7 @@ import { Subscriptions, Users, Roles } from '../../../models';
 
 Meteor.methods({
 	getRoomRoles(rid) {
+		this.unblock();
 		check(rid, String);
 
 		if (!Meteor.userId() && settings.get('Accounts_AllowAnonymousRead') === false) {

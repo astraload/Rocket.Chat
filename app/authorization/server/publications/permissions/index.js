@@ -7,7 +7,7 @@ Meteor.methods({
 	'permissions/get'(updatedAt) {
 		// TODO: should we return this for non logged users?
 		// TODO: we could cache this collection
-
+		this.unblock();
 		const records = Permissions.find().fetch();
 
 		if (updatedAt instanceof Date) {

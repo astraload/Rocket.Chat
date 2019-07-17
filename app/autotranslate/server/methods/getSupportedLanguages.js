@@ -6,6 +6,7 @@ import AutoTranslate from '../autotranslate';
 
 Meteor.methods({
 	'autoTranslate.getSupportedLanguages'(targetLanguage) {
+		this.unblock();
 		if (!hasPermission(Meteor.userId(), 'auto-translate')) {
 			throw new Meteor.Error('error-action-not-allowed', 'Auto-Translate is not allowed', { method: 'autoTranslate.saveSettings' });
 		}

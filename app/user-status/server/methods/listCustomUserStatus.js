@@ -4,6 +4,8 @@ import { CustomUserStatus } from '../../../models';
 
 Meteor.methods({
 	listCustomUserStatus() {
+		this.unblock();
+
 		const currentUserId = Meteor.userId();
 		if (!currentUserId) {
 			throw new Meteor.Error('error-invalid-user', 'Invalid user', { method: 'listCustomUserStatus' });
