@@ -1,12 +1,3 @@
-import Agent from 'meteor/kschingiz:meteor-elastic-apm';
-
-const options = {
-  serviceName: 'rocket_chat',
-  serverUrl: 'http://status.prod.rc.astraload.internal:8200'
-};
-Agent.start(options);
-
-
 import './importPackages';
 import '../imports/startup/server';
 
