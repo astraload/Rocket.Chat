@@ -1,11 +1,36 @@
+import fs from 'fs';
+
 import { Meteor } from 'meteor/meteor';
+import { Random } from 'meteor/random';
 import { check } from 'meteor/check';
+import v8Profiler from 'v8-profiler-node8';
+
 
 import { hasPermission, hasRole, getUsersInRole } from '../../../authorization';
 import { Subscriptions, Rooms } from '../../../models';
 import { removeUserFromRoom } from '../functions';
 
 Meteor.methods({
+	startProfile() {
+		function saveProfile(profile) {
+			console.log('saving profile to disk...');
+			const name = Random.id();
+			const outputLocation = `/tmp/${ name }.cpuprofile`;
+			const writeToDisk = Meteor.wrapAsync(fs.writeFile);
+			profile.export(Meteor.bindEnvironment(function(error, result) {
+				writeToDisk(outputLocation, result);
+			}));
+		}
+		console.log('starting profiling...', v8Profiler);
+		v8Profiler.setSamplingInterval(500);
+		v8Profiler.startProfiling('onStart', true);
+		setTimeout(Meteor.bindEnvironment(() => {
+			const profile = v8Profiler.stopProfiling('onStart');
+			saveProfile(profile);
+			profile.delete();
+			console.log('profiling finished');
+		}), 120 * 1000);
+	},
 	leaveRoom(rid) {
 		check(rid, String);
 
